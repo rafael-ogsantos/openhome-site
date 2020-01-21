@@ -116,11 +116,13 @@
 							<p style="color: #476776 !important; text-align: center">Fale com o representante..</p>
 
 							<div class="box">
-								<form action="https://app.openbless.com/api/dados" method="post">
+								<form action="{{ route('send')}}" method="post">
+                                @csrf
 									<div class="row ">
 										<div class="col-md-5">
 											<div class="inputForm ">
 												<input type="text" name="nome" required>
+                                                <input type="text" name="user_imovel" value="{{ $imoveis->email_user }}" hidden>
 												<label style="background-color: white; padding: 1px">Nome*</label>
 											</div>
 										</div>

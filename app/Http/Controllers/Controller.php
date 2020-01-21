@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imoveis;
 use App\Properties;
+use App\Mail_send;
 use App\Property;
 use App\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -14,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Hash;
+use Mail;
+
 
 Builder::macro('if', function ($condition, $column, $operator, $value) {
     if ($condition) {
@@ -76,7 +79,7 @@ class Controller extends BaseController
 
     public function buscaFiltroAvancado(Request $request){
         $buscas = 'aki';
-        
+
         $consulta = Properties::if($request->button_ba_1, 'banheiros','=', $request->button_ba_1)
         ->if($request->button_ba_2, 'banheiros','=', $request->button_ba_2)
         ->if(@$request->minimo, 'valor_tot', '>=',@$request->minimo)
@@ -87,6 +90,29 @@ class Controller extends BaseController
             'buscas' => $consulta,
             'search' => $buscas
         ]);
+    }
+
+    public function sendEmail(Request $request){
+        $mail = new Mail_send();
+        $mail->nome = $request->nome;
+        $mail->email = $request->email;
+        $mail->telefone = $request->telefone;
+        $mail->mensagem = $request->mensagem;
+        $mail->email_dono = $request->user_imovel;
+        $mail->save();
+
+        $emails = [$request->user_imovel];
+        $assunto = 'teste';
+        
+        $corpo =
+            '<p>NOME:<b>' . @$request->nome. '</b></p>' .
+            '<p>EMAIL:<b>' . @$request->email . '</b></p>' .
+            '<p>TELEFONE:<b> ' . @$request->telefone . '</b></p>' .
+            '<p>MENSAGEM:<b> ' . @$request->mensagem . '</b></p>';
+
+        Mail::send('email.email_padrao', ['msg' => $corpo], function($mail) use($emails, $assunto){
+            $mail->to($emails)->subject($assunto);
+        });
     }
     
 
