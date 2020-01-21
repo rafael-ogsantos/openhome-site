@@ -17,8 +17,10 @@
 
 Route::get('/', 'Controller@listarImoveis')->name('list.imoveis');
 Route::any('/busca', 'Controller@busca')->name('busca');
+Route::post('/buscaAvancada', 'Controller@buscaFiltroAvancado')->name('buscaAvancada');
 Route::post('/consulta-view', 'Controller@consulta')->name('consulta');
 Route::get('/imoveis/{id}', 'Controller@imovelId')->name('list.id');
+
 // Route::get('/admin', 'AuthController@dashboard')->name('admin');
 // Route::get('/login', 'AuthController@loginForm')->name('admin.login');
 // Route::get('/logout', 'AuthController@logout')->name('admin.logout');

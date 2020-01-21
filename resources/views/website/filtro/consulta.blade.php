@@ -1,30 +1,73 @@
 @extends('website.layouts.layout')
 
 @section('content')
+
+<style>
+    .btn{
+        padding: 10px;
+        background-color: green
+    }
+
+    .btn_banheiro{
+        padding: 10px;
+        border-radius: 40px
+    }
+
+    .boxButton{
+        width: 45%;
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    .box{
+        display: flex;
+    }
+</style>
 <section>
     <div class="container-filtro">
         <div class="row">
             <div class="col-md-3">
                 <div class="dados-busca">
                     <div class="painel-filtro">
-                        <div class="input-busca">
-                            <h2>Localizacao do imovel</h2>
-                            <input type="text" class="busca" placeholder="Digite uma rua, bairro ou uma cidade">
-                            <div class="span-detalhes">
-                                @foreach($buscas as $busca)
-                                <span>{{ $busca->estado }}</span>
-                                @endforeach
+                        <form action="{{ route('buscaAvancada')}}" class="form-imoveis" id="form" method="post">
+                        @csrf
+                            <div class="input-busca">
+                                <h2>Localizacao do imovel</h2>
+                                <input type="text" name="loc" class="busca" placeholder="Digite uma rua, bairro ou uma cidade">
+                                <div class="span-detalhes">
+                                    @foreach($buscas as $busca)
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
 
 
-                        <div class="input-busca">
-                            <h2>Tipo do imovel</h2>
-                            <input type="text" class="busca" placeholder="Digite uma rua, bairro ou cidade">
-                            <div class="span-detalhes">
-                                <span style="text-transform:uppercase">{{ $search }}</span>
+                            <div class="input-busca">
+                                <h2>Tipo do imovel</h2>
+                                <input type="text" name="tipo" class="busca" placeholder="Digite uma rua, bairro ou cidade">
                             </div>
-                        </div>
+
+                            <div class="input-busca">
+                                <div class="box">
+                                    <div class="boxButton">
+                                        <h2>Valor minimo</h2>
+                                        <input type="text" name="minimo" class="busca" placeholder="valor maximo">
+                                    </div>
+                                    
+                                    <div class="boxButton">
+                                        <h2>Valor maximo</h2>
+                                        <input type="text" name="maximo" class="busca" placeholder="valor minimo">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h2>Banheiro</h2>
+                                <button type="submit" class="btn_banheiro" name="button_ba_1" value="1">1</button>
+                                <button type="submit" class="btn_banheiro" name="button_ba_2" value="2">2</button>
+                            </div>
+
+                            <button type="submit" class="btn"><i class="fas fa-search"></i></button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -32,7 +75,7 @@
             <div class="col-md-9">
                 <div class="filtro-imoveis">
                     <div style="display: flex; align-items:center; margin-left:15px">
-                        <span style="font-size: 22px; font-weight: 600">Apartamentos em {{ $busca->estado }}</span>
+                        <span style="font-size: 22px; font-weight: 600">Apartamentos em</span>
                     </div>
 
                     @foreach($buscas as $busca)

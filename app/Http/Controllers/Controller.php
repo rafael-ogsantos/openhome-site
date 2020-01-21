@@ -12,7 +12,15 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Hash;
+
+Builder::macro('if', function ($condition, $column, $operator, $value) {
+    if ($condition) {
+		return $this->where($column, $operator, $value);
+	}
+	return $this;
+});
 
 class Controller extends BaseController
 {
@@ -21,7 +29,9 @@ class Controller extends BaseController
     public function listarImoveis(){
         $properties = Properties::all();
 
-        dd($properties);
+        return view('website/home/home', [
+            'properties' => $properties
+        ]);
     }
 
     public function imovelId($id){
@@ -47,14 +57,38 @@ class Controller extends BaseController
         $consulta = Properties::where('tipo', 'LIKE', '%'.$buscas.'%')
         ->orWhere('negociacao', 'like', '%'.$buscas.'%')
         ->orWhere('endereco', 'like', '%'.$buscas.'%')
-        ->orWhere('estado', 'like', '%'.$buscas.'%')->get();
-     
+        ->orWhere('estado', 'like', '%'.$buscas.'%')
+        ->get();
+
+        if(count($consulta) == 0){
+            return view('website/filtro/consultaFail',[
+                'results' => 'nao encontrado'
+            ]);
+        }else{
             return view('website.filtro.consulta', [
                 'buscas' => $consulta,
                 'search' => $buscas
             ]);
+        }
+     
           
     }
+
+    public function buscaFiltroAvancado(Request $request){
+        $buscas = 'aki';
+        
+        $consulta = Properties::if($request->button_ba_1, 'banheiros','=', $request->button_ba_1)
+        ->if($request->button_ba_2, 'banheiros','=', $request->button_ba_2)
+        ->if(@$request->minimo, 'valor_tot', '>=',@$request->minimo)
+        ->if(@$request->maximo, 'valor_tot', '<=',@$request->maximo)
+        ->get();
+
+        return view('website.filtro.consulta', [
+            'buscas' => $consulta,
+            'search' => $buscas
+        ]);
+    }
+    
 
     public function consulta(){
        

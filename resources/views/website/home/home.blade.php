@@ -128,9 +128,9 @@
                      <div class="col-md-4">
                         <div class="card">
                            <figure class="thumbnail">
-                              <img src="{{$imovel->image}}" class="imgs">
+                              <img src="http://blessedmarketingdigital.com.br/project-assets/uploaded/images/{{$imovel->image}}" class="imgs">
                               <figcaption class="tipo">
-                                 {{$imovel->image}}
+                              {{$imovel->negociacao}}
                               </figcaption>
                            </figure>
 
